@@ -5,7 +5,7 @@ description: Step 6 of the model workflow. Summarises all prior decisions and wa
 
 # Step 6: Sign-off
 
-Human-driven step. Read `.workflow/state.json` in full.
+Human-driven step. Read `.workflow/state.json` (statuses, verdicts, override reasons) and every file in `.workflow/decisions/`.
 
 ## Do
 
@@ -18,22 +18,4 @@ Human-driven step. Read `.workflow/state.json` in full.
 
 ## Emit
 
-End with exactly:
-
-## DECISIONS
-```json
-{
-  "step": 6,
-  "decisions": {
-    "decision": "go | conditional | no_go",
-    "conditions": [],
-    "acknowledged_risks": [],
-    "monitoring_plan": {"metrics": [], "trigger": ""}
-  },
-  "interim_results": {
-    "val_primary_metric": 0.0,
-    "min_acceptable_metric": 0.0
-  },
-  "artifacts": []
-}
-```
+End your reply with a `## DECISIONS` heading followed by a free-text markdown record and nothing after it. Write it for a reader who has seen none of the conversation (a person or another LLM): plain prose or bullets, no required schema. Include the decision (go / conditional go / no go), conditions, which risks from earlier warnings or overrides were acknowledged, the validation metric against the step 1 minimum, and the monitoring plan with its retrain/alert trigger. Give the reason behind each choice in the user's own words where you have them. State every number with its unit. No artifacts.

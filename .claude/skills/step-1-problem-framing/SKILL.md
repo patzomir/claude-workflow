@@ -22,23 +22,4 @@ Summarise back in 3 lines and confirm before emitting. If the user's answers are
 
 ## Emit
 
-End your reply with exactly this block and nothing after it:
-
-## DECISIONS
-```json
-{
-  "step": 1,
-  "decisions": {
-    "target_definition": "",
-    "positive_class_rate_expected": 0.0,
-    "primary_metric": "",
-    "min_acceptable_metric": 0.0,
-    "cost_fp": 0.0,
-    "cost_fn": 0.0,
-    "observation_window_days": 0,
-    "prediction_horizon_days": 0
-  },
-  "interim_results": {},
-  "artifacts": []
-}
-```
+End your reply with a `## DECISIONS` heading followed by a free-text markdown record and nothing after it. Write it for a reader who has seen none of the conversation (a person or another LLM): plain prose or bullets, no required schema. Include target definition, expected positive rate, primary metric, minimum acceptable value, FP/FN costs, observation window and prediction horizon (days). Give the reason behind each choice in the user's own words where you have them. State every number with its unit. No artifacts.

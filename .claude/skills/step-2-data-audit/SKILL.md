@@ -5,7 +5,7 @@ description: Step 2 of the model workflow. Simulates a data profile (missingness
 
 # Step 2: Data audit
 
-Simulation plus human decisions. Read `.workflow/state.json` for step 1 decisions and `seed`.
+Simulation plus human decisions. Read `.workflow/state.json` for `seed` and `.workflow/decisions/step-1.md` for step 1 decisions.
 
 ## Simulate
 
@@ -27,24 +27,4 @@ Compute `n_rows_after_cleaning` consistently with the choices (simulated but ari
 
 ## Emit
 
-End with exactly:
-
-## DECISIONS
-```json
-{
-  "step": 2,
-  "decisions": {
-    "missing_threshold": 0.0,
-    "outlier_rule": "",
-    "columns_dropped": []
-  },
-  "interim_results": {
-    "simulated": true,
-    "n_rows": 0,
-    "n_rows_after_cleaning": 0,
-    "observed_positive_rate": 0.0,
-    "columns_remaining": []
-  },
-  "artifacts": [".workflow/artifacts/step2_profile.csv"]
-}
-```
+End your reply with a `## DECISIONS` heading followed by a free-text markdown record and nothing after it. Write it for a reader who has seen none of the conversation (a person or another LLM): plain prose or bullets, no required schema. Include missing threshold, outlier rule, columns dropped (and why), rows before/after cleaning, observed positive rate, the columns remaining, and a note that the profile is simulated. Give the reason behind each choice in the user's own words where you have them. State every number with its unit. List the artifact path: `.workflow/artifacts/step2_profile.csv`.

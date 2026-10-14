@@ -18,10 +18,10 @@ Progress is saved in `.workflow/state.json`, so you can quit and resume at any t
 /top-workflow (navigator, reads state file)
  -> user picks step N
  -> step-N skill runs inline (simulation + questions to the user)
- -> step emits a ## DECISIONS JSON block
- -> navigator writes decisions to the state file
+ -> step ends with a free-text ## DECISIONS markdown record
+ -> navigator saves it to .workflow/decisions/step-N.md
  -> navigator spawns quality-gate subagent (clean context, no user interaction)
-      input:  step decisions + prior steps' context + artifact paths
+      input:  paths to this step's and prior steps' decision files + artifact paths
       checks: completeness, range, consistency, cross-step coherence, domain plausibility
       output: verdict JSON (pass | warn | fail)
  -> navigator shows the verdict
@@ -57,45 +57,17 @@ A step is available once all earlier steps are done (`pass`, `warn` or `overridd
   agents/
     quality-gate.md                read-only validator subagent
 .workflow/                         created at runtime
-  state.json                       decisions, results, verdicts per step
+  state.json                       status, verdict, file pointers per step
+  decisions/step-N.md              free-text decisions, readable by a person or an LLM
   artifacts/                       CSVs produced by the simulations
 ```
 
 ## State file
 
-`.workflow/state.json` holds, per step: `status` (`not_started`, `pass`, `warn`, `fail`, `overridden`, `stale`), `decisions`, `interim_results`, `artifacts`, the gate `verdict`, and `override_reason` if overridden. Only the navigator writes it.
+`.workflow/state.json` holds, per step: `status` (`not_started`, `pass`, `warn`, `fail`, `overridden`, `stale`), `decisions_file`, `artifacts`, the gate `verdict`, and `override_reason` if overridden. Only the navigator writes it. The decisions themselves live in `.workflow/decisions/step-N.md`.
 
 ## Step contract
 
-Each step skill ends its reply with:
+Each step skill ends its reply with a `## DECISIONS` heading followed by a free-text markdown record: the choices made, their reasons, the key numbers with units, and any artifact paths. There is no fixed schema; the quality gate extracts what it needs from the prose and flags anything missing or too vague to check.
 
-````
-## DECISIONS
-```json
-{ "step": N, "decisions": {...}, "interim_results": {...}, "artifacts": [...] }
-```
-````
-
-If the block is missing or invalid, the navigator records nothing and offers a re-run.
-
-## Quality gate
-
-`quality-gate` has read-only tools (Read, Glob, Grep) and cannot ask questions. It runs five checks:
-
-- **completeness**: required fields present
-- **range**: values inside allowed bounds
-- **consistency**: values within the step agree (e.g. cost recomputes from confusion counts)
-- **cross_step**: agrees with earlier steps (e.g. selected features survived the data audit)
-- **plausibility**: would a practitioner believe it (e.g. AUC above 0.95 suggests leakage)
-
-Verdict is `fail` if any finding is `fail`, `warn` if any is `warn`, otherwise `pass`. The per-step rubric lives in [.claude/agents/quality-gate.md](.claude/agents/quality-gate.md).
-
-## Extending
-
-- **Add a step:** create `.claude/skills/step-N-.../SKILL.md` that ends with the `## DECISIONS` block, add it to the state template in `top-workflow`, and add a rubric entry in `quality-gate.md`.
-- **Use real data:** replace the "Simulate" section of a step with code that reads your dataset; keep the decisions schema unchanged so the gate still works.
-- **Tighten or loosen checks:** edit the thresholds in `quality-gate.md`.
-
-## Reset
-
-Delete `.workflow/` to start over (the navigator asks for confirmation if you request a reset).
+If the heading is missing or the record is empty, the navigator records nothing and offers a re-run.

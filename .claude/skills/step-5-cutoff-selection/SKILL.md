@@ -5,7 +5,7 @@ description: Step 5 of the model workflow. Simulates the precision/recall/cost c
 
 # Step 5: Cutoff selection
 
-Simulation plus human decision. Read `.workflow/state.json` for steps 1–4 (costs, positive rate, `val_auc`, `n_rows_after_cleaning`).
+Simulation plus human decision. Read `seed` from `.workflow/state.json` and the decision files `.workflow/decisions/step-1.md` to `step-4.md` (costs, positive rate, validation AUC, rows after cleaning).
 
 ## Simulate
 
@@ -23,24 +23,4 @@ AskUserQuestion:
 
 ## Emit
 
-End with exactly:
-
-## DECISIONS
-```json
-{
-  "step": 5,
-  "decisions": {
-    "selection_rule": "",
-    "cutoff": 0.0,
-    "grid": [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95]
-  },
-  "interim_results": {
-    "simulated": true,
-    "tp": 0, "fp": 0, "fn": 0, "tn": 0,
-    "precision": 0.0,
-    "recall": 0.0,
-    "expected_cost": 0.0
-  },
-  "artifacts": [".workflow/artifacts/step5_cutoff_grid.csv"]
-}
-```
+End your reply with a `## DECISIONS` heading followed by a free-text markdown record and nothing after it. Write it for a reader who has seen none of the conversation (a person or another LLM): plain prose or bullets, no required schema. Include selection rule, chosen cutoff, the confusion counts, precision, recall and expected cost at it (with the costs used), the neighbouring cutoffs considered, and a note that the grid is simulated. Give the reason behind each choice in the user's own words where you have them. State every number with its unit. List the artifact path: `.workflow/artifacts/step5_cutoff_grid.csv`.

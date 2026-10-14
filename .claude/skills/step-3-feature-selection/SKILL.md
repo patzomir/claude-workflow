@@ -5,7 +5,7 @@ description: Step 3 of the model workflow. Simulates univariate information valu
 
 # Step 3: Feature selection
 
-Simulation plus human decisions. Read `.workflow/state.json` for steps 1–2 (`columns_remaining`, `n_rows_after_cleaning`, `seed`).
+Simulation plus human decisions. Read `seed` from `.workflow/state.json` and the decision files `.workflow/decisions/step-1.md` and `step-2.md` (columns remaining, rows after cleaning).
 
 ## Simulate
 
@@ -25,24 +25,4 @@ Compute the final list consistently.
 
 ## Emit
 
-End with exactly:
-
-## DECISIONS
-```json
-{
-  "step": 3,
-  "decisions": {
-    "iv_min": 0.0,
-    "corr_cutoff": 0.0,
-    "features_selected": [],
-    "features_dropped": [{"feature": "", "reason": ""}]
-  },
-  "interim_results": {
-    "simulated": true,
-    "n_features_before": 0,
-    "n_features_after": 0,
-    "max_iv": 0.0
-  },
-  "artifacts": [".workflow/artifacts/step3_screening.csv"]
-}
-```
+End your reply with a `## DECISIONS` heading followed by a free-text markdown record and nothing after it. Write it for a reader who has seen none of the conversation (a person or another LLM): plain prose or bullets, no required schema. Include IV minimum, correlation cutoff, features selected, features dropped with a reason each, feature counts before/after, the maximum IV seen, and a note that the screening is simulated. Give the reason behind each choice in the user's own words where you have them. State every number with its unit. List the artifact path: `.workflow/artifacts/step3_screening.csv`.

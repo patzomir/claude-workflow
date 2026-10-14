@@ -5,7 +5,7 @@ description: Step 4 of the model workflow. Simulates cross-validated training of
 
 # Step 4: Model training
 
-Simulation plus human decision. Read `.workflow/state.json` for steps 1–3.
+Simulation plus human decision. Read `seed` from `.workflow/state.json` and the decision files `.workflow/decisions/step-1.md` to `step-3.md`.
 
 ## Simulate
 
@@ -25,24 +25,4 @@ Update the chosen model's simulated metrics to reflect the folds and hyperparame
 
 ## Emit
 
-End with exactly:
-
-## DECISIONS
-```json
-{
-  "step": 4,
-  "decisions": {
-    "model_family": "",
-    "hyperparameters": {},
-    "cv_folds": 0
-  },
-  "interim_results": {
-    "simulated": true,
-    "train_auc": 0.0,
-    "val_auc": 0.0,
-    "val_auc_std": 0.0,
-    "val_primary_metric": 0.0
-  },
-  "artifacts": [".workflow/artifacts/step4_candidates.csv"]
-}
-```
+End your reply with a `## DECISIONS` heading followed by a free-text markdown record and nothing after it. Write it for a reader who has seen none of the conversation (a person or another LLM): plain prose or bullets, no required schema. Include model family, hyperparameters, CV folds, train AUC, validation AUC (with std dev), validation value of the step 1 primary metric, the trade-offs the user weighed, and a note that results are simulated. Give the reason behind each choice in the user's own words where you have them. State every number with its unit. List the artifact path: `.workflow/artifacts/step4_candidates.csv`.
